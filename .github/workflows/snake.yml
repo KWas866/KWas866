@@ -1,29 +1,29 @@
-name: Generate Snake
+name: Snake Animation Updater
 on:
   schedule:
-    - cron: "0 0 * * *"
-  workflow_dispatch:
+    - cron: "0 0 * * *"  
+  workflow_dispatch:      
 
 jobs:
-  generate:
+  generate-snake:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-    
+      contents: write  
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: true
-          
+
       - name: Create output directory
         run: mkdir -p output
-          
-      - name: Generate Snake via API
+
+      - name: Generate Snake
         run: |
-          curl "https://github-contribution-svg.vercel.app/api?user=${{ github.repository_owner }}&type=snake" > output/github-contribution-grid-snake.svg
-          curl "https://github-contribution-svg.vercel.app/api?user=${{ github.repository_owner }}&type=snake&palette=github-dark" > output/github-contribution-grid-snake-dark.svg
-          
+          curl -s "https://github-contribution-svg.vercel.app/api?user=${{ github.repository_owner }}&type=snake&random=$RANDOM" > output/github-contribution-grid-snake.svg
+          curl -s "https://github-contribution-svg.vercel.app/api?user=${{ github.repository_owner }}&type=snake&palette=github-dark&random=$RANDOM" > output/github-contribution-grid-snake-dark.svg
+
       - name: Commit and Push
         run: |
           git config --global user.name "github-actions"
