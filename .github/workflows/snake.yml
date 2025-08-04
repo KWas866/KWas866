@@ -1,32 +1,47 @@
-name: Update Snake Animation
-
+name: Generate Snake
 on:
   schedule:
-    - cron: "0 0 * * *"  
-  workflow_dispatch:     
+    - cron: "0 0 * * *"
+  workflow_dispatch:
 
 jobs:
-  generate-snake:
+  generate:
     runs-on: ubuntu-latest
     permissions:
-      contents: write    
-
+      contents: write
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
       - name: Generate Snake
         uses: Platane/snk@master
+        id: snake
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
             github-contribution-grid-snake.svg
             github-contribution-grid-snake-dark.svg
-
-      - name: Commit & Push
+          
+      - name: Create output directory
+        run: mkdir -p output
+          
+      - name: Move files to output
+        run: |
+          mv github-contribution-grid-snake.svg output/
+          mv github-contribution-grid-snake-dark.svg output/
+          
+      - name: Commit and Push
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
+          git add output/
           git commit -m "Update snake animation" || echo "No changes"
           git push
