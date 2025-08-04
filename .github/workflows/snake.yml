@@ -12,16 +12,18 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: true
-          
+      
       - name: Generate Snake
         uses: Platane/snk@v2
-        id: snake
         with:
           github_user_name: ${{ github.repository_owner }}
-          svg_path: output/github-contribution-grid-snake.svg
+          svg_path: github-contribution-grid-snake.svg
+          
+      - name: Create output directory
+        run: mkdir -p output
+          
+      - name: Move file to output
+        run: mv github-contribution-grid-snake.svg output/
           
       - name: Commit and Push
         run: |
