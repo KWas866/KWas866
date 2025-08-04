@@ -10,4 +10,4 @@
   </a>
 <br/>
 
-![Snake animation](https://github.com/KWas866/KWas866/blob/output/github-contribution-grid-snake.svg?raw=true)
+<img src="https://raw.githubusercontent.com/KWas866/KWas866/output/github-contribution-grid-snake.svg" width="100%">
