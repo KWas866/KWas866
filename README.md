@@ -12,4 +12,5 @@
 
 ![GitHub Snake](https://raw.githubusercontent.com/KWas866/KWas866/main/snake.svg)
 
+![GitHub Snake](https://raw.githubusercontent.com/KWas866/KWas866/output/snake.svg)
 
