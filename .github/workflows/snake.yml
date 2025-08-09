@@ -3,8 +3,7 @@ name: Generate Snake SVG
 on:
   schedule:
     - cron: '0 0 * * *'   
-  workflow_dispatch: {}
-
+  workflow_dispatch: {}   
 permissions:
   contents: write  
 
@@ -27,8 +26,8 @@ jobs:
 
       - name: Run snake generator
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}        
-          GH_USER: ${{ github.actor }}              
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}  
+          GH_USER: KWas866                   
         run: |
           python3 snake.py
 
@@ -37,7 +36,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add snake.svg
-          # commit tylko jeśli są zmiany
           if ! git diff --staged --quiet; then
             git commit -m "chore: update snake.svg (auto)"
             git push
