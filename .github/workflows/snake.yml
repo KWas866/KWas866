@@ -1,33 +1,46 @@
-name: Snake Animation Updater
+name: Generate Snake SVG
+
 on:
   schedule:
-    - cron: "0 0 * * *"  
-  workflow_dispatch:      
+    - cron: '0 0 * * *'   
+  workflow_dispatch: {}
+
+permissions:
+  contents: write  
 
 jobs:
-  generate-snake:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write  
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           persist-credentials: true
 
-      - name: Create output directory
-        run: mkdir -p output
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
-      - name: Generate Snake
-        run: |
-          curl -s "https://github-contribution-svg.vercel.app/api?user=${{ github.repository_owner }}&type=snake&random=$RANDOM" > output/github-contribution-grid-snake.svg
-          curl -s "https://github-contribution-svg.vercel.app/api?user=${{ github.repository_owner }}&type=snake&palette=github-dark&random=$RANDOM" > output/github-contribution-grid-snake-dark.svg
+      - name: Install dependencies
+        run: pip install requests
 
-      - name: Commit and Push
+      - name: Run snake generator
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}        
+          GH_USER: ${{ github.actor }}              
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add output/
-          git commit -m "Update snake animation [skip ci]" || echo "No changes to commit"
-          git push
+          python3 snake.py
+
+      - name: Commit and push SVG
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add snake.svg
+          # commit tylko jeśli są zmiany
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: update snake.svg (auto)"
+            git push
+          else
+            echo "No changes to commit"
+          fi
