@@ -109,7 +109,11 @@ head_r = cell * 0.45
 
 svg_parts = []
 svg_parts.append(
-    f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">')
+    f'<svg xmlns="http://www.w3.org/2000/svg" '
+    f'xmlns:xlink="http://www.w3.org/1999/xlink" '
+    f'width="{width}" height="{height}" viewBox="0 0 {width} {height}">'
+)
+
 svg_parts.append('<defs>')
 
 svg_parts.append('''<style>
