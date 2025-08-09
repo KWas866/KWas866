@@ -10,5 +10,6 @@
   </a>
 <br/>
 
-![GitHub Snake](./snake.svg)
+![GitHub Snake](https://raw.githubusercontent.com/KWas866/KWas866/main/snake.svg)
+
 
