@@ -92,6 +92,9 @@ step = 0.45
 total_dur = max(2.0, len(points) * step)
 head_r = cell * 0.45
 
+# Ile sekund wcześniej wąż "zjada" pole (efekt klasycznego snake)
+lead_time = 0.9  # można dostosować
+
 # === Tworzenie SVG ===
 svg_parts = []
 svg_parts.append(
@@ -171,16 +174,16 @@ for i in range(1, 5):
     ''')
 svg_parts.append('</g>')
 
-# Efekt błysku przy jedzeniu
+# Efekt błysku przy jedzeniu z wyprzedzeniem
 for i, (_, _, date, cnt, color, rect_id) in enumerate(points):
-    begin = f"{i * step}s"
-    svg_parts.append(f'<animate xlink:href="#{rect_id}" attributeName="fill-opacity" from="1" to="0.1" begin="{begin}" dur="0.15s" fill="freeze" />')
+    begin = max(0, i * step - lead_time)  # animacja zaczyna się wcześniej niż ruch węża
+    svg_parts.append(f'<animate xlink:href="#{rect_id}" attributeName="fill-opacity" from="1" to="0.1" begin="{begin:.2f}s" dur="0.15s" fill="freeze" />')
     cx = rects[int(rect_id[1:])]["x"] + cell/2
     cy = rects[int(rect_id[1:])]["y"] + cell/2
     svg_parts.append(f'''
     <circle cx="{cx}" cy="{cy}" r="0" fill="#facc15" opacity="0.8">
-      <animate attributeName="r" begin="{begin}" dur="0.3s" values="0;8;0" fill="freeze" />
-      <animate attributeName="opacity" begin="{begin}" dur="0.3s" values="0.8;0;0" fill="freeze" />
+      <animate attributeName="r" begin="{begin:.2f}s" dur="0.3s" values="0;8;0" fill="freeze" />
+      <animate attributeName="opacity" begin="{begin:.2f}s" dur="0.3s" values="0.8;0;0" fill="freeze" />
     </circle>
     ''')
 
@@ -193,4 +196,4 @@ svg_parts.append('</svg>')
 with open("snake.svg", "w", encoding="utf-8") as f:
     f.write("\n".join(svg_parts))
 
-print("✅ Wygenerowano snake.svg z trybem ciemnym i ulepszoną animacją")
+print("✅ Wygenerowano snake.svg z efektem zjadania z wyprzedzeniem")
